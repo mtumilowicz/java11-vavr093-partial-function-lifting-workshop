@@ -1,14 +1,13 @@
 import spock.lang.Specification
 
-import java.util.regex.Pattern
-
+import java.util.regex.Pattern 
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
 class Workshop extends Specification {
     def "define partial function on 0..3: x -> x + 1, otherwise -1"() {
         given:
-        def increment = -1 // implement PartialFunction, use Range<Integer> from guava or 1..3 groovy range syntax
+        def increment = new Increment() // implement PartialFunction, use Range<Integer> from guava or 1..3 groovy range syntax
         
         expect:
         increment.apply(-1) == -1
@@ -22,7 +21,7 @@ class Workshop extends Specification {
     def "define partial function that checks if string matches regex only letters, otherwise ValidationException - success"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = -1 // implement PartialFunction
+        def validation = new Validation() // implement PartialFunction
 
         expect:
         validation.apply("a")
@@ -34,12 +33,23 @@ class Workshop extends Specification {
     def "define partial function that checks if string matches regex only letters, otherwise ValidationException - exception"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = -1 // implement PartialFunction
+        def validation = new Validation() // implement PartialFunction
 
         when:
         validation.apply("1")
 
         then:
         thrown(ValidationException)
+    }
+
+    def "define partial function: identity on 0..3, otherwise random"() {
+        given:
+        def randomIdentity = new RandomIdentity() // implement PartialFunction using Range guava
+
+        expect:
+        randomIdentity.apply(0) == 0
+        randomIdentity.apply(1) == 1
+        randomIdentity.apply(2) == 2
+        randomIdentity.apply(3) == 3
     }
 }

@@ -1,3 +1,4 @@
+import com.google.common.collect.Range
 import spock.lang.Specification
 
 import java.util.regex.Pattern 
@@ -42,4 +43,14 @@ class Answers extends Specification {
         thrown(ValidationException)
     }
 
+    def "define partial function: identity on 0..3, otherwise random"() {
+        given:
+        def randomIdentity = new RandomIdentityAnswer(Range.closed(0, 3))
+        
+        expect:
+        randomIdentity.apply(0) == 0
+        randomIdentity.apply(1) == 1
+        randomIdentity.apply(2) == 2
+        randomIdentity.apply(3) == 3
+    }
 }
