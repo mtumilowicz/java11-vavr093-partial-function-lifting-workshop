@@ -13,7 +13,7 @@ class IncrementAnswer implements PartialFunction<Integer, Integer> {
 
     @Override
     Integer apply(Integer o) {
-        return range.contains(o) ? ++o : -1
+        return isDefinedAt(o) ? ++o : -1
     }
 
     @Override
