@@ -1,25 +1,11 @@
-import io.vavr.PartialFunction
 import spock.lang.Specification 
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
 class Workshop extends Specification {
-    def "define partial function on [0, 3]: x -> x + 1, otherwise -1"() {
+    def "define partial function on 0..3: x -> x + 1, otherwise -1"() {
         given:
-        def increment = new PartialFunction<Integer, Integer>() {
-            
-            def range = [0..10]
-            
-            @Override
-            Integer apply(Integer o) {
-                return range.contains(o) ? ++o : -1
-            }
-
-            @Override
-            boolean isDefinedAt(Integer value) {
-                return range.contains(value)
-            }
-        }
+        def increment = -1 // implement PartialFunction, use Range<Integer> from guava or 1..3 groovy range syntax
         
         expect:
         increment.apply(-1) == -1
