@@ -18,7 +18,7 @@ class Answers extends Specification {
         increment.apply(4) == -1
     }
     
-    def "define partial function that check if string matches regex only letters, otherwise ValidationException - success"() {
+    def "define partial function that checks if string matches regex only letters, otherwise ValidationException - success"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         def validation = new ValidatorAnswer(pattern)
@@ -30,7 +30,7 @@ class Answers extends Specification {
         validation.apply("qwerty")
     }
 
-    def "define partial function that check if string matches regex only letters, otherwise ValidationException - exception"() {
+    def "define partial function that checks if string matches regex only letters, otherwise ValidationException - exception"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         def validation = new ValidatorAnswer(pattern)
