@@ -1,6 +1,7 @@
 import com.google.common.collect.Range
 import io.vavr.Function2
 import io.vavr.control.Option
+import io.vavr.control.Try
 import spock.lang.Specification
 
 import java.util.function.BinaryOperator
@@ -98,7 +99,7 @@ class Answers extends Specification {
         lifted.apply(4) == Option.none()
     }
 
-    def "vavr lifting function: div"() {
+    def "vavr lifting function with Option: div"() {
         given:
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
 
@@ -112,12 +113,13 @@ class Answers extends Specification {
         lifted.apply(4, 2) == Option.some(2)
     }
 
-    def "vavr lifting function: Repository.findById"() {
+    def "vavr lifting function with Try: Repository.findById"() {
         given:
         def repo = new RepositoryACLAnswer()
 
         expect:
-        repo.findById(1) == Option.some(new User(1))
-        repo.findById(2) == Option.none()
+        repo.findById(1) == Try.success(new User(1))
+        repo.findById(2).failure
+        repo.findById(2).cause.class == UserCannotBeFoundException
     }
 }
