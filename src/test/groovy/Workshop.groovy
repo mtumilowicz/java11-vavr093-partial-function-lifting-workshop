@@ -22,7 +22,7 @@ class Workshop extends Specification {
     def "define partial function that checks if string matches regex only letters, otherwise ValidationException - success"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = new Validation() // implement PartialFunction
+        def validation = new Validator() // implement PartialFunction
 
         expect:
         validation.apply("a")
@@ -34,7 +34,7 @@ class Workshop extends Specification {
     def "define partial function that checks if string matches regex only letters, otherwise ValidationException - exception"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = new Validation() // implement PartialFunction
+        def validation = new Validator() // implement PartialFunction
 
         when:
         validation.apply("1")
@@ -65,5 +65,19 @@ class Workshop extends Specification {
         lifted.apply(2) == Option.some(3)
         lifted.apply(3) == Option.some(4)
         lifted.apply(4) == Option.none()
+    }
+
+    def "lifter - lifting partial function - Validator" () {
+        when:
+        def lifted = Lifter.lift(new Validator(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
+
+        then:
+        lifted.apply("a") == Option.some(true)
+        lifted.apply("abc") == Option.some(true)
+        lifted.apply("z") == Option.some(true)
+        lifted.apply("qwerty") == Option.some(true)
+        lifted.apply("1") == Option.none()
+        lifted.apply("d2d") == Option.none()
+        lifted.apply("%") == Option.none()
     }
 }

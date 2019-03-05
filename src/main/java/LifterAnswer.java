@@ -9,7 +9,7 @@ import java.util.function.Function;
  */
 class LifterAnswer {
     static <T, R> Function<T, Option<R>> lift(PartialFunction<T, R> function) {
-        return x -> Option.when(function.isDefinedAt(x), function.apply(x));
+        return x -> Option.when(function.isDefinedAt(x), () -> function.apply(x));
     }
 
     static <T, R> Function<T, Option<R>> lift(Function<T, R> function) {
