@@ -96,7 +96,7 @@ class Workshop extends Specification {
         lifted.apply(4) == Option.none()
     }
 
-    def "lifting function: div"() {
+    def "vavr lifting function: div"() {
         given:
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b)}
 
