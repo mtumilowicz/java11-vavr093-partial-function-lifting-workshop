@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.com/mtumilowicz/java11-vavr-093-partial-function-lifting-workshop.svg?branch=master)](https://travis-ci.com/mtumilowicz/java11-vavr-093-partial-function-lifting-workshop)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-# java11-vavr-093-partial-function-lifting-workshop
+
+# java11-vavr093-partial-function-lifting-workshop
 
 # project description
 * https://www.vavr.io/vavr-docs/#_lifting
