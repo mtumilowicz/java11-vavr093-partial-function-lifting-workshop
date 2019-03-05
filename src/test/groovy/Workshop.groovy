@@ -1,3 +1,4 @@
+import io.vavr.control.Option
 import spock.lang.Specification
 
 import java.util.regex.Pattern 
@@ -51,5 +52,18 @@ class Workshop extends Specification {
         randomIdentity.apply(1) == 1
         randomIdentity.apply(2) == 2
         randomIdentity.apply(3) == 3
+    }
+
+    def "lifter - lifting partial function - Increment" () {
+        when:
+        def liftedIncrement = Lifter.lift(new Increment())
+
+        then:
+        liftedIncrement.apply(-1) == Option.none()
+        liftedIncrement.apply(0) == Option.some(1)
+        liftedIncrement.apply(1) == Option.some(2)
+        liftedIncrement.apply(2) == Option.some(3)
+        liftedIncrement.apply(3) == Option.some(4)
+        liftedIncrement.apply(4) == Option.none()
     }
 }
