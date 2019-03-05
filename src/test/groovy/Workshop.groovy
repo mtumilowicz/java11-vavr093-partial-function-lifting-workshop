@@ -105,6 +105,7 @@ class Workshop extends Specification {
 
         then:
         lifted.apply(1, 0) == Option.none()
+        lifted.apply(null, 2) == Option.none()
         lifted.apply(2, 0) == Option.none()
         lifted.apply(4, 2) == Option.some(2)
     }
