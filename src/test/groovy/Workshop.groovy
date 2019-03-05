@@ -2,6 +2,7 @@ import com.google.common.collect.Range
 import io.vavr.control.Option
 import spock.lang.Specification
 
+import java.util.function.BinaryOperator
 import java.util.regex.Pattern 
 /**
  * Created by mtumilowicz on 2019-03-04.
@@ -93,5 +94,18 @@ class Workshop extends Specification {
         lifted.apply(2) == Option.some(2)
         lifted.apply(3) == Option.some(3)
         lifted.apply(4) == Option.none()
+    }
+
+    def "lifting function: div"() {
+        given:
+        BinaryOperator<Integer> div = { a, b -> a.intdiv(b)}
+
+        when:
+        def lifted = div // vavr lift
+
+        then:
+        lifted.apply(1, 0) == Option.none()
+        lifted.apply(2, 0) == Option.none()
+        lifted.apply(4, 2) == Option.some(2)
     }
 }
