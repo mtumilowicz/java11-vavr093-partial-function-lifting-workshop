@@ -109,4 +109,13 @@ class Workshop extends Specification {
         lifted.apply(2, 0) == Option.none()
         lifted.apply(4, 2) == Option.some(2)
     }
+
+    def "vavr lifting function: Repository.findById"() {
+        given:
+        def repo = new RepositoryACL()
+
+        expect:
+        repo.findById(1) == Option.some(new User(1))
+        repo.findById(2) == Option.none()
+    }
 }

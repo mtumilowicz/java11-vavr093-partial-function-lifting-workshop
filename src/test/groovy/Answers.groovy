@@ -4,7 +4,8 @@ import io.vavr.control.Option
 import spock.lang.Specification
 
 import java.util.function.BinaryOperator
-import java.util.regex.Pattern 
+import java.util.regex.Pattern
+
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
@@ -96,18 +97,27 @@ class Answers extends Specification {
         lifted.apply(3) == Option.some(3)
         lifted.apply(4) == Option.none()
     }
-    
+
     def "vavr lifting function: div"() {
         given:
-        BinaryOperator<Integer> div = { a, b -> a.intdiv(b)}
+        BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
 
         when:
         def lifted = Function2.lift(div)
-        
+
         then:
         lifted.apply(1, 0) == Option.none()
         lifted.apply(null, 2) == Option.none()
         lifted.apply(2, 0) == Option.none()
         lifted.apply(4, 2) == Option.some(2)
+    }
+
+    def "vavr lifting function: Repository.findById"() {
+        given:
+        def repo = new RepositoryACLAnswer()
+
+        expect:
+        repo.findById(1) == Option.some(new User(1))
+        repo.findById(2) == Option.none()
     }
 }
