@@ -1,6 +1,11 @@
 plugins {
     id 'java'
     id 'groovy'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
+lombok {
+    version = '1.18.4'
 }
 
 group 'java11-vavr-093-partial-function-lifting-workshop'

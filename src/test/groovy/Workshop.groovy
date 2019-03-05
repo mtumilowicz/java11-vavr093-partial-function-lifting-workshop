@@ -3,8 +3,13 @@ import io.vavr.control.Option
 import io.vavr.control.Try
 import spock.lang.Specification
 
+import java.time.Clock
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.function.BinaryOperator
-import java.util.regex.Pattern 
+import java.util.regex.Pattern
+import java.util.stream.Stream 
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
@@ -119,5 +124,59 @@ class Workshop extends Specification {
         repo.findById(1) == Try.success(new User(1))
         repo.findById(2).failure
         repo.findById(2).cause.class == UserCannotBeFoundException
+    }
+
+    def "for a given list of users, activate users that can be active and save them - using function lifting with Option"() {
+        given:
+        ActiveUserRepository activeUserRepository = new ActiveUserRepository()
+        and:
+        def cannotBeActive = BlockedUser.builder()
+                .id(1)
+                .banDate(LocalDate.parse("2014-10-12"))
+                .warn(15)
+                .build()
+        and:
+        def canBeActive = BlockedUser.builder()
+                .id(2)
+                .banDate(LocalDate.parse("2016-10-12"))
+                .warn(0)
+                .build()
+        and:
+        def now = Clock.fixed(Instant.parse("2016-12-03T10:15:30Z"), ZoneId.systemDefault())
+
+        when:
+        Stream.of(cannotBeActive, canBeActive) // process here
+
+        then:
+        activeUserRepository.count() == 1
+        activeUserRepository.existsAll(List.of(2))
+    }
+
+    def "for a given list of users, activate users that can be active and save them - using function lifting with Try"() {
+        given:
+        ActiveUserRepository activeUserRepository = new ActiveUserRepository()
+        and:
+        def cannotBeActive = BlockedUser.builder()
+                .id(1)
+                .banDate(LocalDate.parse("2014-10-12"))
+                .warn(15)
+                .build()
+        and:
+        def canBeActive = BlockedUser.builder()
+                .id(2)
+                .banDate(LocalDate.parse("2016-10-12"))
+                .warn(0)
+                .build()
+        and:
+        def now = Clock.fixed(Instant.parse("2016-12-03T10:15:30Z"), ZoneId.systemDefault())
+        and:
+        def fails = []
+
+        when:
+        Stream.of(cannotBeActive, canBeActive) // process here
+        then:
+        activeUserRepository.count() == 1
+        activeUserRepository.existsAll([2])
+        fails == ["id = 1: warns has to be <= 10"]
     }
 }
