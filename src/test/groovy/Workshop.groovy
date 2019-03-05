@@ -1,3 +1,4 @@
+import com.google.common.collect.Range
 import io.vavr.control.Option
 import spock.lang.Specification
 
@@ -79,5 +80,18 @@ class Workshop extends Specification {
         lifted.apply("1") == Option.none()
         lifted.apply("d2d") == Option.none()
         lifted.apply("%") == Option.none()
+    }
+
+    def "lifter - lifting partial function - RandomIdentity"() {
+        when:
+        def lifted = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
+
+        then:
+        lifted.apply(-1) == Option.none()
+        lifted.apply(0) == Option.some(0)
+        lifted.apply(1) == Option.some(1)
+        lifted.apply(2) == Option.some(2)
+        lifted.apply(3) == Option.some(3)
+        lifted.apply(4) == Option.none()
     }
 }
