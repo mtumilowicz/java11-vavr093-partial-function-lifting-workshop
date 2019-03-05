@@ -56,14 +56,14 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function - Increment" () {
         when:
-        def liftedIncrement = Lifter.lift(new Increment())
+        def lifted = Lifter.lift(new Increment())
 
         then:
-        liftedIncrement.apply(-1) == Option.none()
-        liftedIncrement.apply(0) == Option.some(1)
-        liftedIncrement.apply(1) == Option.some(2)
-        liftedIncrement.apply(2) == Option.some(3)
-        liftedIncrement.apply(3) == Option.some(4)
-        liftedIncrement.apply(4) == Option.none()
+        lifted.apply(-1) == Option.none()
+        lifted.apply(0) == Option.some(1)
+        lifted.apply(1) == Option.some(2)
+        lifted.apply(2) == Option.some(3)
+        lifted.apply(3) == Option.some(4)
+        lifted.apply(4) == Option.none()
     }
 }
