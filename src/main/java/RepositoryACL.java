@@ -1,10 +1,13 @@
 import io.vavr.control.Try;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class RepositoryACL {
-    final Repository repository = new Repository();
+    Repository repository = new Repository();
     
     // implement using function lifting
     Try<User> findById(int id) {
