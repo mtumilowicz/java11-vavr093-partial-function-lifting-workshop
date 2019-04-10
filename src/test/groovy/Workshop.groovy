@@ -14,9 +14,9 @@ import java.util.stream.Stream
  * Created by mtumilowicz on 2019-03-04.
  */
 class Workshop extends Specification {
-    def "define partial function on 0..3: x -> x + 1, otherwise -1"() {
+    def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
-        def increment = new Increment() // implement PartialFunction, use Range<Integer> from guava or 1..3 groovy range syntax
+        def increment = new Increment() // implement PartialFunction
         
         expect:
         increment.apply(-1) == -1

@@ -16,7 +16,7 @@ import java.util.stream.Stream
  * Created by mtumilowicz on 2019-03-04.
  */
 class Answers extends Specification {
-    def "define partial function on 0..3: x -> x + 1, otherwise -1"() {
+    def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
         def increment = new IncrementAnswer(0..3)
 
