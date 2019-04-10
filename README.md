@@ -15,6 +15,7 @@
   for some `K c X`. For `x e X\K` function is undefined
 * in programming, if partial function is called with a disallowed 
   input value, it will typically throw an exception
+  * in particular - every function that throws an exception is a partial function
 * partial function (to set intuition)
     ```
     int do(int positive) {
@@ -32,8 +33,8 @@
         boolean isDefinedAt(T value); // tests if a value is contained in the function's domain.
     }
     ```
-    * the caller is responsible for calling the method isDefinedAt() before this function is applied to the value.
-    * if the function is not defined for a specific value, apply() may produce an arbitrary result.
+    * the caller is responsible for calling the method `isDefinedAt()` before this function is applied to the value
+    * if the function is not defined for a specific value, `apply()` may produce an arbitrary result
         * in particular - even random values
         * more specifically it is not guaranteed that the function will throw an exception
     * above example rewritten with vavr
