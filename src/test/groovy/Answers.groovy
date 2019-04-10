@@ -12,12 +12,13 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.function.BinaryOperator
 import java.util.function.Function
-import java.util.stream.Stream 
+import java.util.stream.Stream
+
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
 class Answers extends Specification {
-    
+
     def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
         PartialFunction<Integer, Integer> increment = new IncrementAnswer(0..3)
@@ -83,7 +84,7 @@ class Answers extends Specification {
 
         when:
         Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(exceptionalIdentity)
-        
+
         then:
         lifted.apply(1) == Option.none()
         lifted.apply(2) == Option.none()
@@ -133,12 +134,13 @@ class Answers extends Specification {
 
     def "vavr - lifting function with Try: Repository.findById"() {
         given:
-        def repo = new RepositoryACLAnswer()
+        def repo = new Repository()
+        Function1<Integer, Try<User>> findById = Function1.liftTry({ repo.findById(it) })
 
         expect:
-        repo.findById(1) == Try.success(new User(1))
-        repo.findById(2).failure
-        repo.findById(2).cause.class == UserCannotBeFoundException
+        findById.apply(1) == Try.success(new User(1))
+        findById.apply(2).failure
+        findById.apply(2).cause.class == UserCannotBeFoundException
     }
 
     def "for a given list of users, activate users that can be active and save them - using function lifting with Option"() {

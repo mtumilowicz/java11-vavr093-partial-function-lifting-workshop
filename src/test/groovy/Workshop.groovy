@@ -1,4 +1,5 @@
 import com.google.common.collect.Range
+import io.vavr.Function1
 import io.vavr.Function2
 import io.vavr.PartialFunction
 import io.vavr.control.Option
@@ -83,12 +84,13 @@ class Workshop extends Specification {
 
     def "vavr - lifting function with Try: Repository.findById"() {
         given:
-        def repo = new RepositoryACL()
+        def repo = new Repository()
+        Function1<Integer, Try<User>> findById = repo.findById(it) // lift with Try, hint: Function1.liftTry
 
         expect:
-        repo.findById(1) == Try.success(new User(1))
-        repo.findById(2).failure
-        repo.findById(2).cause.class == UserCannotBeFoundException
+        findById.apply(1) == Try.success(new User(1))
+        findById.apply(2).failure
+        findById.apply(2).cause.class == UserCannotBeFoundException
     }
 
     def "for a given list of users, activate users that can be active and save them - using function lifting with Option"() {
