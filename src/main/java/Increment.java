@@ -12,7 +12,7 @@ class Increment implements PartialFunction<Integer, Integer> {
 
     @Override
     public boolean isDefinedAt(Integer value) {
-        // defined oly on 0..3
+        // defined only on 0..3
         // use Range<Integer> from guava or 1..3 groovy range syntax
         return false;
     }

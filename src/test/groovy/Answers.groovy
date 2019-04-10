@@ -41,7 +41,7 @@ class Answers extends Specification {
         validation.apply("qwerty")
     }
 
-    def "exception case: define partial function that checks if string matches regex only letters, otherwise ValidationException"() {
+    def "exception case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         def validation = new ValidatorAnswer(pattern)

@@ -39,7 +39,7 @@ class Workshop extends Specification {
         validation.apply("qwerty")
     }
 
-    def "exception case: define partial function that checks if string matches regex only letters, otherwise ValidationException"() {
+    def "exception case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         def validation = new Validator() // implement PartialFunction
@@ -53,7 +53,7 @@ class Workshop extends Specification {
 
     def "define partial function: identity on 0..3, otherwise random"() {
         given:
-        def randomIdentity = new RandomIdentity() // implement PartialFunction using Range guava
+        def randomIdentity = new RandomIdentity() // implement PartialFunction
 
         expect:
         randomIdentity.apply(0) == 0
@@ -64,7 +64,7 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function - Increment" () {
         when:
-        def lifted = Lifter.lift(new Increment())
+        def lifted = Lifter.lift(new Increment()) // implement Lifter.lift
 
         then:
         lifted.apply(-1) == Option.none()
