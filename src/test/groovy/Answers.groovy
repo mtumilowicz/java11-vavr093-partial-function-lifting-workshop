@@ -43,7 +43,7 @@ class Answers extends Specification {
         randomIdentity.apply(3) == 3
     }
 
-    def "lifter - lifting partial function - Increment, RandomIdentity"() {
+    def "lifter - lifting partial function with Option - Increment, RandomIdentity"() {
         given:
         Function<Integer, Option<Integer>> liftedIncrement = LifterAnswer.lift(new IncrementAnswer(0..3))
         and:
