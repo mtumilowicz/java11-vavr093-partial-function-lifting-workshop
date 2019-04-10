@@ -1,6 +1,7 @@
 import com.google.common.collect.Range
 import io.vavr.Function1
 import io.vavr.Function2
+import io.vavr.PartialFunction
 import io.vavr.control.Option
 import io.vavr.control.Try
 import spock.lang.Specification
@@ -10,6 +11,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.function.BinaryOperator
+import java.util.function.Function
+import java.util.function.Predicate
 import java.util.regex.Pattern
 import java.util.stream.Stream 
 /**
@@ -18,7 +21,7 @@ import java.util.stream.Stream
 class Answers extends Specification {
     def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
-        def increment = new IncrementAnswer(0..3)
+        PartialFunction<Integer, Integer> increment = new IncrementAnswer(0..3)
 
         expect:
         increment.apply(-1) == -1
@@ -31,8 +34,8 @@ class Answers extends Specification {
 
     def "success case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
-        def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = new ValidatorAnswer(pattern)
+        Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
+        PartialFunction<String, Boolean> validation = new ValidatorAnswer(pattern)
 
         expect:
         validation.apply("a")
@@ -43,8 +46,8 @@ class Answers extends Specification {
 
     def "exception case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
-        def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = new ValidatorAnswer(pattern)
+        Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
+        PartialFunction<String, Boolean> validation = new ValidatorAnswer(pattern)
 
         when:
         validation.apply("1")
@@ -55,7 +58,7 @@ class Answers extends Specification {
 
     def "define partial function: identity on 0..3, otherwise random"() {
         given:
-        def randomIdentity = new RandomIdentityAnswer(Range.closed(0, 3))
+        PartialFunction<Integer, Integer> randomIdentity = new RandomIdentityAnswer(Range.closed(0, 3))
 
         expect:
         randomIdentity.apply(0) == 0
@@ -66,7 +69,7 @@ class Answers extends Specification {
 
     def "lifter - lifting partial function - Increment"() {
         when:
-        def lifted = LifterAnswer.lift(new IncrementAnswer(0..3))
+        Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(new IncrementAnswer(0..3))
 
         then:
         lifted.apply(-1) == Option.none()
@@ -79,7 +82,7 @@ class Answers extends Specification {
 
     def "lifter - lifting partial function - Validator"() {
         when:
-        def lifted = LifterAnswer.lift(new ValidatorAnswer(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
+        Function<String, Option<Boolean>> lifted = LifterAnswer.lift(new ValidatorAnswer(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
 
         then:
         lifted.apply("a") == Option.some(true)
@@ -93,7 +96,7 @@ class Answers extends Specification {
 
     def "lifter - lifting partial function - RandomIdentity"() {
         when:
-        def lifted = LifterAnswer.lift(new RandomIdentityAnswer(Range.closed(0, 3)))
+        Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(new RandomIdentityAnswer(Range.closed(0, 3)))
 
         then:
         lifted.apply(-1) == Option.none()
@@ -109,7 +112,7 @@ class Answers extends Specification {
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
 
         when:
-        def lifted = Function2.lift(div)
+        Function2<Integer, Integer, Option<Integer>> lifted = Function2.lift(div)
 
         then:
         lifted.apply(1, 0) == Option.none()
