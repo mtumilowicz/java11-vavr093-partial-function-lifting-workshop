@@ -59,10 +59,9 @@
     of `Y`
     * That means a partial function works properly only for some input values
     * If the function is called with a disallowed input value, it will typically throw an exception
-* In programming - we usually **lift** function `f: (K c X) -> Y` to `g: X -> Option<Y>` in such a manner:
-    * A lifted function returns Some, if the function is invoked with allowed input values.
+* In programming - we usually **lift** partial function `f: (K c X) -> Y` to `g: X -> Option<Y>` in such a manner:
+    * A lifted function returns `Some`, if the function is invoked with allowed input values
         * `g(x).get() = f(x)` on `K`
-    * A lifted function returns None instead of throwing an exception, if the function is invoked with disallowed 
+    * A lifted function returns `None` instead of throwing an exception, if the function is invoked with disallowed 
         * `g(x) = Option.none()` for `x e X\K`
-input values
 # conclusions in a nutshell
