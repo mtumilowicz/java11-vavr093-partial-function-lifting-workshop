@@ -11,6 +11,10 @@
 * answers: `Answers` (same tests as in `Workshop` but correctly solved)
 
 # theory in a nutshell
+* a partial function from `X` to `Y` is a function `f: K → Y`, 
+  for some `K c X`. For `x e X\K` function is undefined
+* in programming, if partial function is called with a disallowed 
+  input value, it will typically throw an exception
 * partial function (to set intuition)
     ```
     int do(int positive) {
