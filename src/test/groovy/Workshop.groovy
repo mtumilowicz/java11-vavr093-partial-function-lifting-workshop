@@ -112,14 +112,18 @@ class Workshop extends Specification {
         def now = Clock.fixed(Instant.parse("2016-12-03T10:15:30Z"), ZoneId.systemDefault())
 
         when:
-        Stream.of(cannotBeActive, canBeActive) // process here, hint: use BlockedUser.activate(now), activeUserRepository.add
+        /*
+        process here, 
+        hint: use Function1.lift, BlockedUser.activate(now), activeUserRepository.add
+         */
+        Stream.of(cannotBeActive, canBeActive)
 
         then:
         activeUserRepository.count() == 1
         activeUserRepository.containsAll(List.of(2))
     }
 
-    def "for a given list of users, activate users that can be active and save them - using function lifting with Try"() {
+    def "for a given list of users, activate users that can be active and save them or generate report - using function lifting with Try"() {
         given:
         ActiveUserRepository activeUserRepository = new ActiveUserRepository()
         and:
@@ -137,11 +141,13 @@ class Workshop extends Specification {
         and:
         def now = Clock.fixed(Instant.parse("2016-12-03T10:15:30Z"), ZoneId.systemDefault())
         and:
-        def fails = []
+        List<String> fails = []
 
         when:
-        // process here, hint: use BlockedUser.activate(now), activeUserRepository.add
-        // Try.onSuccess, onFailure
+        /*
+        process here, reports are aggregated in fails
+        hint: use Function1.lift, BlockedUser.activate(now), Try.onSuccess, onFailure, activeUserRepository.add
+         */
         Stream.of(cannotBeActive, canBeActive)
         then:
         activeUserRepository.count() == 1
