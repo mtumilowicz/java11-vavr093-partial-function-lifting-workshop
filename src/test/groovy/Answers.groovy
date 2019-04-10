@@ -29,7 +29,7 @@ class Answers extends Specification {
         increment.apply(4) == -1
     }
 
-    def "success case: define partial function that checks if string matches regex only letters, otherwise ValidationException"() {
+    def "success case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
         def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         def validation = new ValidatorAnswer(pattern)
