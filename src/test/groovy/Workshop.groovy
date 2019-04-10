@@ -1,4 +1,5 @@
 import com.google.common.collect.Range
+import io.vavr.PartialFunction
 import io.vavr.control.Option
 import io.vavr.control.Try
 import spock.lang.Specification
@@ -8,6 +9,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.function.BinaryOperator
+import java.util.function.Function
+import java.util.function.Predicate
 import java.util.regex.Pattern
 import java.util.stream.Stream 
 /**
@@ -16,7 +19,7 @@ import java.util.stream.Stream
 class Workshop extends Specification {
     def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
-        def increment = new Increment() // implement PartialFunction
+        PartialFunction<Integer, Integer> increment = new Increment() // implement PartialFunction
         
         expect:
         increment.apply(-1) == -1
@@ -29,8 +32,8 @@ class Workshop extends Specification {
 
     def "success case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
-        def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = new Validator() // implement PartialFunction
+        Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
+        PartialFunction<String, Boolean> validation = new Validator() // implement PartialFunction
 
         expect:
         validation.apply("a")
@@ -41,8 +44,8 @@ class Workshop extends Specification {
 
     def "exception case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
         given:
-        def pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        def validation = new Validator() // implement PartialFunction
+        Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
+        PartialFunction<String, Boolean> validation = new Validator() // implement PartialFunction
 
         when:
         validation.apply("1")
@@ -53,7 +56,7 @@ class Workshop extends Specification {
 
     def "define partial function: identity on 0..3, otherwise random"() {
         given:
-        def randomIdentity = new RandomIdentity() // implement PartialFunction
+        PartialFunction<Integer, Integer> randomIdentity = new RandomIdentity() // implement PartialFunction
 
         expect:
         randomIdentity.apply(0) == 0
@@ -64,7 +67,7 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function - Increment" () {
         when:
-        def lifted = Lifter.lift(new Increment()) // implement Lifter.lift
+        Function<Integer, Option<Integer>> lifted = Lifter.lift(new Increment()) // implement Lifter.lift
 
         then:
         lifted.apply(-1) == Option.none()
@@ -77,7 +80,7 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function - Validator" () {
         when:
-        def lifted = Lifter.lift(new Validator(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
+        Function<String, Option<Boolean>> lifted = Lifter.lift(new Validator(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
 
         then:
         lifted.apply("a") == Option.some(true)
@@ -91,7 +94,7 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function - RandomIdentity"() {
         when:
-        def lifted = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
+        Function<String, Option<Boolean>> lifted = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
 
         then:
         lifted.apply(-1) == Option.none()

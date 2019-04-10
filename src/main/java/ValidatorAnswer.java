@@ -12,8 +12,7 @@ class ValidatorAnswer implements PartialFunction<String, Boolean> {
     ValidatorAnswer(Predicate<String> pattern) {
         PATTERN = pattern;
     }
-
-
+    
     @Override
     public Boolean apply(String s) {
         if (isDefinedAt(s)) {
