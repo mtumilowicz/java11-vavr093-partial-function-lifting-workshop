@@ -33,7 +33,7 @@ class Answers extends Specification {
         increment.apply(4) == -1
     }
 
-    def "success case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
+    def "success case: define partial function that checks if string contains only letters, otherwise ValidationException"() {
         given:
         Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         PartialFunction<String, Boolean> validation = new ValidatorAnswer(pattern)
@@ -45,7 +45,7 @@ class Answers extends Specification {
         validation.apply("qwerty")
     }
 
-    def "exception case: define partial function that checks if string matches only letters, otherwise ValidationException"() {
+    def "exception case: define partial function that checks if string contains only letters, otherwise ValidationException"() {
         given:
         Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
         PartialFunction<String, Boolean> validation = new ValidatorAnswer(pattern)
@@ -57,7 +57,7 @@ class Answers extends Specification {
         thrown(ValidationException)
     }
 
-    def "define partial function: identity on 0..3, otherwise random"() {
+    def "define partial function: identity on [0,...,3], otherwise random"() {
         given:
         PartialFunction<Integer, Integer> randomIdentity = new RandomIdentityAnswer(Range.closed(0, 3))
 
