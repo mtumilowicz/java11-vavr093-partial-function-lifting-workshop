@@ -67,6 +67,57 @@ class Workshop extends Specification {
         liftedRandomIdentity.apply(4) == Option.none()
     }
 
+    def "lifter - lift function with Option"() {
+        given:
+        Function<Integer, Integer> exceptionalIdentity = {
+            switch (it) {
+                case 1:
+                    throw new IllegalArgumentException()
+                case 2:
+                    throw new IllegalStateException()
+                default:
+                    return it
+            }
+        }
+
+        when:
+        // implement Lifter.lift
+        Function<Integer, Option<Integer>> lifted = Lifter.lift(exceptionalIdentity)
+
+        then:
+        lifted.apply(1) == Option.none()
+        lifted.apply(2) == Option.none()
+        lifted.apply(3) == Option.some(3)
+    }
+
+    def "lifter - lift function with Try"() {
+        given:
+        Function<Integer, Integer> exceptionalIdentity = {
+            switch (it) {
+                case 1:
+                    throw new IllegalArgumentException()
+                case 2:
+                    throw new IllegalStateException()
+                default:
+                    return it
+            }
+        }
+
+        when:
+        // implement Lifter.liftTry
+        Function<Integer, Try<Integer>> lifted = Lifter.liftTry(exceptionalIdentity)
+        def one = lifted.apply(1)
+        def two = lifted.apply(2)
+        def three = lifted.apply(3)
+
+        then:
+        one.failure
+        one.cause.class == IllegalArgumentException
+        two.failure
+        two.cause.class == IllegalStateException
+        three == Try.success(3)
+    }
+
     def "vavr - lifting function with Option: div"() {
         given:
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
