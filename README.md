@@ -13,13 +13,15 @@
 # theory in a nutshell
 * a partial function from `X` to `Y` is a function `f: K → Y`, 
   for some `K c X`. For `x e X\K` function is undefined
-* in programming, if partial function is called with a disallowed 
-  input value, it will typically throw an exception
-  * in particular - every function that throws an exception is a partial function
+* It generalizes the concept of a function `f: X → Y` by not forcing `f` to map every element of `X` to an element 
+    of `Y`
+    * that means a partial function works properly only for some input values
+    * in programming, if the function is called with a disallowed input value, it will typically throw an exception
+        * in particular - every function that throws an exception is a partial function
 * partial function (to set intuition)
     ```
     int do(int positive) {
-        if (first < 0) {
+        if (positive < 0) {
                 throw new IllegalArgumentException("Only positive integers are allowed"); 
         }
         // other stuff
@@ -37,7 +39,7 @@
     * if the function is not defined for a specific value, `apply()` may produce an arbitrary result
         * in particular - even random values
         * more specifically it is not guaranteed that the function will throw an exception
-    * above example rewritten with vavr
+    * `do(int positive)` mentioned above - rewritten with vavr:
         ```
         class RandomIdentityAnswer implements PartialFunction<Integer, Integer> {
             
@@ -55,14 +57,11 @@
             }
         }
         ```
-* It generalizes the concept of a function `f: X → Y` by not forcing `f` to map every element of `X` to an element 
-    of `Y`
-    * That means a partial function works properly only for some input values
-    * If the function is called with a disallowed input value, it will typically throw an exception
 * In programming - we usually **lift** partial function `f: (K c X) -> Y` to `g: X -> Option<Y>` in such a manner:
     * A lifted function returns `Some`, if the function is invoked with allowed input values
         * `g(x).get() = f(x)` on `K`
-    * A lifted function returns `None` instead of throwing an exception, if the function is invoked with disallowed 
+    * A lifted function returns `None` instead of throwing an exception, if the function is invoked with disallowed
+    input values
         * `g(x) = Option.none()` for `x e X\K`
 # conclusions in a nutshell
 In vavr we have two approaches to lifting:
@@ -71,10 +70,17 @@ In vavr we have two approaches to lifting:
     Function2<Integer, Integer, Integer> divide = (a, b) -> a / b;
     
     Function2<Integer, Integer, Option<Integer>> lifted = Function2.lift(divide);
+    
+    lifted.apply(1, 0) == Option.none()
+    lifted.apply(4, 2) == Option.some(2)
     ```
 * lifting function with `Try`
     ```
     Function2<Integer, Integer, Integer> divide = (a, b) -> a / b;
     
     Function2<Integer, Integer, Try<Integer>> lifted = Function2.liftTry(divide);
+    
+    lifted.apply(1, 0).failure
+    lifted.apply(1, 0).cause.class == ArithmeticException
+    lifted.apply(4, 2) == Try.success(2)
     ```
