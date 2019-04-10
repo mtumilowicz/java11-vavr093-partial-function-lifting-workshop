@@ -15,7 +15,7 @@ class ActiveUserRepository {
         storage.put(user.getId(), user);
     }
 
-    boolean existsAll(Collection<Integer> ids) {
+    boolean containsAll(Collection<Integer> ids) {
         return storage.keySet().containsAll(ids);
     }
     

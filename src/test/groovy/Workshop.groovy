@@ -116,7 +116,7 @@ class Workshop extends Specification {
 
         then:
         activeUserRepository.count() == 1
-        activeUserRepository.existsAll(List.of(2))
+        activeUserRepository.containsAll(List.of(2))
     }
 
     def "for a given list of users, activate users that can be active and save them - using function lifting with Try"() {
@@ -145,7 +145,7 @@ class Workshop extends Specification {
         Stream.of(cannotBeActive, canBeActive)
         then:
         activeUserRepository.count() == 1
-        activeUserRepository.existsAll([2])
+        activeUserRepository.containsAll([2])
         fails == ["id = 1: warns has to be <= 10"]
     }
 }
