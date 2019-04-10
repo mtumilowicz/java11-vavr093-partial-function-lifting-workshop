@@ -166,7 +166,7 @@ class Answers extends Specification {
 
         then:
         activeUserRepository.count() == 1
-        activeUserRepository.containsAll(List.of(2))
+        activeUserRepository.containsAll([2])
     }
 
     def "for a given list of users, activate users that can be active and save them - using function lifting with Try"() {

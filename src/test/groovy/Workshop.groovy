@@ -123,7 +123,7 @@ class Workshop extends Specification {
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
 
         when:
-        Function2<Integer, Integer, Option<Integer>> lifted = div // FunctionN.lift
+        Function2<Integer, Integer, Option<Integer>> lifted = div // use FunctionN.lift
 
         then:
         lifted.apply(1, 0) == Option.none()
@@ -135,7 +135,7 @@ class Workshop extends Specification {
     def "vavr - lifting function with Try: Repository.findById"() {
         given:
         def repo = new Repository()
-        Function1<Integer, Try<User>> findById = repo.findById(it) // lift with Try, hint: Function1.liftTry
+        Function1<Integer, Try<User>> findById = repo.findById(it) // use Function1.liftTry
 
         expect:
         findById.apply(1) == Try.success(new User(1))
@@ -170,7 +170,7 @@ class Workshop extends Specification {
 
         then:
         activeUserRepository.count() == 1
-        activeUserRepository.containsAll(List.of(2))
+        activeUserRepository.containsAll([2])
     }
 
     def "for a given list of users, activate users that can be active and save them or generate report - using function lifting with Try"() {
