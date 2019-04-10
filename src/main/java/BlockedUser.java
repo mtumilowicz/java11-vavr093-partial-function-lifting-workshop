@@ -25,3 +25,9 @@ class BlockedUser {
         return ActiveUser.builder().id(id).build();
     }
 }
+
+class BusinessException extends RuntimeException {
+    BusinessException(String message) {
+        super(message);
+    }
+}
