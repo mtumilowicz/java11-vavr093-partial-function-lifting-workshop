@@ -65,3 +65,16 @@
     * A lifted function returns `None` instead of throwing an exception, if the function is invoked with disallowed 
         * `g(x) = Option.none()` for `x e X\K`
 # conclusions in a nutshell
+In vavr we have two approaches to lifting:
+* lifting function with `Option`
+    ```
+    Function2<Integer, Integer, Integer> divide = (a, b) -> a / b;
+    
+    Function2<Integer, Integer, Option<Integer>> lifted = Function2.lift(divide);
+    ```
+* lifting function with `Try`
+    ```
+    Function2<Integer, Integer, Integer> divide = (a, b) -> a / b;
+    
+    Function2<Integer, Integer, Try<Integer>> lifted = Function2.liftTry(divide);
+    ```
