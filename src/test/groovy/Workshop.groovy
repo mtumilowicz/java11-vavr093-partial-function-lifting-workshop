@@ -134,6 +134,21 @@ class Workshop extends Specification {
         lifted.apply(4, 2) == Option.some(2)
     }
 
+    def "vavr - lifting function with Try: div"() {
+        given:
+        BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
+
+        when:
+        Function2<Integer, Integer, Try<Integer>> lifted = div // use FunctionN.liftTry
+
+        then:
+        lifted.apply(1, 0).failure
+        lifted.apply(1, 0).cause.class == ArithmeticException
+        lifted.apply(null, 2).failure
+        lifted.apply(2, 0).cause.class == ArithmeticException
+        lifted.apply(4, 2) == Try.success(2)
+    }
+
     def "vavr - lifting function with Try: Repository.findById"() {
         given:
         def repo = new Repository()
