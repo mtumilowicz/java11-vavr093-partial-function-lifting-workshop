@@ -13,7 +13,7 @@
 # theory in a nutshell
 * a partial function from `X` to `Y` is a function `f: K → Y`, 
   for some `K c X`. For `x e X\K` function is undefined
-* It generalizes the concept of a function `f: X → Y` by not forcing `f` to map every element of `X` to an element 
+* it generalizes the concept of a function `f: X → Y` by not forcing `f` to map every element of `X` to an element 
     of `Y`
     * that means a partial function works properly only for some input values
     * in programming, if the function is called with a disallowed input value, it will typically throw an exception
@@ -32,16 +32,16 @@
     public interface PartialFunction<T, R> {
         R apply(T t);
     
-        boolean isDefinedAt(T value); // tests if a value is contained in the function's domain.
+        boolean isDefinedAt(T value); // tests if a value is contained in the function's domain
     }
     ```
     * the caller is responsible for calling the method `isDefinedAt()` before this function is applied to the value
     * if the function is not defined for a specific value, `apply()` may produce an arbitrary result
-        * in particular - even random values
-        * more specifically it is not guaranteed that the function will throw an exception
+        * in particular - random values
+        * more specifically - it is not guaranteed that the function will throw an exception
     * `do(int positive)` mentioned above - rewritten with vavr:
         ```
-        class RandomIdentityAnswer implements PartialFunction<Integer, Integer> {
+        class RandomIdentity implements PartialFunction<Integer, Integer> {
             
             @Override
             public Integer apply(Integer o) {
@@ -58,9 +58,9 @@
         }
         ```
 * In programming - we usually **lift** partial function `f: (K c X) -> Y` to `g: X -> Option<Y>` in such a manner:
-    * A lifted function returns `Some`, if the function is invoked with allowed input values
+    * a lifted function returns `Some`, if the function is invoked with allowed input values
         * `g(x).get() = f(x)` on `K`
-    * A lifted function returns `None` instead of throwing an exception, if the function is invoked with disallowed
+    * a lifted function returns `None` instead of throwing an exception, if the function is invoked with disallowed
     input values
         * `g(x) = Option.none()` for `x e X\K`
 # conclusions in a nutshell
@@ -84,3 +84,5 @@ In vavr we have two approaches to lifting:
     lifted.apply(1, 0).cause.class == ArithmeticException
     lifted.apply(4, 2) == Try.success(2)
     ```
+* `Try` is nearly always better, because it contains specific exception, which is often a very valuable information,
+we do not want to lose
