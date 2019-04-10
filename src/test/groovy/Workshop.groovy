@@ -11,13 +11,12 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.function.BinaryOperator
 import java.util.function.Function
-import java.util.function.Predicate
-import java.util.regex.Pattern
 import java.util.stream.Stream 
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
 class Workshop extends Specification {
+    
     def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
         PartialFunction<Integer, Integer> increment = new Increment() // implement PartialFunction
@@ -29,30 +28,6 @@ class Workshop extends Specification {
         increment.apply(2) == 3
         increment.apply(3) == 4
         increment.apply(4) == -1
-    }
-
-    def "success case: define partial function that checks if string contains only letters, otherwise ValidationException"() {
-        given:
-        Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        PartialFunction<String, Boolean> validation = new Validator() // implement PartialFunction
-
-        expect:
-        validation.apply("a")
-        validation.apply("abc")
-        validation.apply("z")
-        validation.apply("qwerty")
-    }
-
-    def "exception case: define partial function that checks if string contains only letters, otherwise ValidationException"() {
-        given:
-        Predicate<String> pattern = Pattern.compile("^[a-z]*\$").asMatchPredicate()
-        PartialFunction<String, Boolean> validation = new Validator() // implement PartialFunction
-
-        when:
-        validation.apply("1")
-
-        then:
-        thrown(ValidationException)
     }
 
     def "define partial function: identity on [0,...,3], otherwise random"() {
@@ -77,20 +52,6 @@ class Workshop extends Specification {
         lifted.apply(2) == Option.some(3)
         lifted.apply(3) == Option.some(4)
         lifted.apply(4) == Option.none()
-    }
-
-    def "lifter - lifting partial function - Validator" () {
-        when:
-        Function<String, Option<Boolean>> lifted = Lifter.lift(new Validator(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
-
-        then:
-        lifted.apply("a") == Option.some(true)
-        lifted.apply("abc") == Option.some(true)
-        lifted.apply("z") == Option.some(true)
-        lifted.apply("qwerty") == Option.some(true)
-        lifted.apply("1") == Option.none()
-        lifted.apply("d2d") == Option.none()
-        lifted.apply("%") == Option.none()
     }
 
     def "lifter - lifting partial function - RandomIdentity"() {
