@@ -1,4 +1,5 @@
 import com.google.common.collect.Range
+import io.vavr.Function2
 import io.vavr.PartialFunction
 import io.vavr.control.Option
 import io.vavr.control.Try
@@ -94,7 +95,7 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function - RandomIdentity"() {
         when:
-        Function<String, Option<Boolean>> lifted = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
+        Function<Integer, Option<Integer>> lifted = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
 
         then:
         lifted.apply(-1) == Option.none()
@@ -110,7 +111,7 @@ class Workshop extends Specification {
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b)}
 
         when:
-        def lifted = div // vavr lift
+        Function2<Integer, Integer, Option<Integer>> lifted = div // FunctionN.lift
 
         then:
         lifted.apply(1, 0) == Option.none()
@@ -148,7 +149,7 @@ class Workshop extends Specification {
         def now = Clock.fixed(Instant.parse("2016-12-03T10:15:30Z"), ZoneId.systemDefault())
 
         when:
-        Stream.of(cannotBeActive, canBeActive) // process here
+        Stream.of(cannotBeActive, canBeActive) // process here, hint: use BlockedUser.activate(now), activeUserRepository.add
 
         then:
         activeUserRepository.count() == 1
@@ -176,7 +177,9 @@ class Workshop extends Specification {
         def fails = []
 
         when:
-        Stream.of(cannotBeActive, canBeActive) // process here
+        // process here, hint: use BlockedUser.activate(now), activeUserRepository.add
+        // Try.onSuccess, onFailure
+        Stream.of(cannotBeActive, canBeActive)
         then:
         activeUserRepository.count() == 1
         activeUserRepository.existsAll([2])

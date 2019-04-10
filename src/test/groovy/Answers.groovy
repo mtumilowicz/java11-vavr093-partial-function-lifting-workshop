@@ -14,7 +14,8 @@ import java.util.function.BinaryOperator
 import java.util.function.Function
 import java.util.function.Predicate
 import java.util.regex.Pattern
-import java.util.stream.Stream 
+import java.util.stream.Stream
+
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
@@ -182,10 +183,10 @@ class Answers extends Specification {
         when:
         Stream.of(cannotBeActive, canBeActive)
                 .map(Function1.liftTry({ BlockedUser user -> user.activate(now) }))
-                .forEach({ tryF -> tryF
-                .onSuccess({activeUserRepository.add(it)})
-                .onFailure({fails.add(it.message)})
-        })
+                .forEach({
+                    it.onSuccess({ activeUserRepository.add(it) })
+                            .onFailure({ fails.add(it.message) })
+                })
 
         then:
         activeUserRepository.count() == 1
