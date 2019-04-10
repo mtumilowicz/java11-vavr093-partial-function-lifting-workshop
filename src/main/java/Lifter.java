@@ -8,10 +8,10 @@ import java.util.function.Function;
  */
 class Lifter {
     static <T, R> Function<T, Option<R>> lift(PartialFunction<T, R> function) {
-        return a -> Option.none();
+        return a -> Option.none(); // use Option.when
     }    
     
     static <T, R> Function<T, Option<R>> lift(Function<T, R> function) {
-        return a -> Option.none();
+        return a -> Option.none(); // use Try.of, toOption
     }
 }
