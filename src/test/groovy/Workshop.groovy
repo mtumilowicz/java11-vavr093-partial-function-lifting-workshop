@@ -47,9 +47,11 @@ class Workshop extends Specification {
 
     def "lifter - lifting partial function with Option - Increment, RandomIdentity"() {
         given:
-        Function<Integer, Option<Integer>> liftedIncrement = Lifter.lift(new Increment()) // implement Lifter.lift
-        and:
-        Function<Integer, Option<Integer>> liftedRandomIdentity = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
+        // implement Lifter.lift(partial function)
+        Function<Integer, Option<Integer>> liftedIncrement = Lifter.lift(new Increment())
+        Function<Integer, Option<Integer>> liftedRandomIdentity = Lifter.lift(
+                new RandomIdentity(Range.closed(0, 3))
+        )
 
         expect:
         liftedIncrement.apply(-1) == Option.none()
@@ -81,7 +83,7 @@ class Workshop extends Specification {
         }
 
         when:
-        // implement Lifter.lift
+        // implement Lifter.lift(function)
         Function<Integer, Option<Integer>> lifted = Lifter.lift(exceptionalIdentity)
 
         then:
@@ -104,7 +106,7 @@ class Workshop extends Specification {
         }
 
         when:
-        // implement Lifter.liftTry
+        // implement Lifter.liftTry(function)
         Function<Integer, Try<Integer>> lifted = Lifter.liftTry(exceptionalIdentity)
         def one = lifted.apply(1)
         def two = lifted.apply(2)
@@ -135,7 +137,7 @@ class Workshop extends Specification {
     def "vavr - lifting function with Try: Repository.findById"() {
         given:
         def repo = new Repository()
-        Function1<Integer, Try<User>> findById = repo.findById(it) // use Function1.liftTry
+        Function1<Integer, Try<User>> findById = repo.findById(it) // use FunctionN.liftTry
 
         expect:
         findById.apply(1) == Try.success(new User(1))
