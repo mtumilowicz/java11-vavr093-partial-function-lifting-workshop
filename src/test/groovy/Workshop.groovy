@@ -12,16 +12,18 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.function.BinaryOperator
 import java.util.function.Function
-import java.util.stream.Stream 
+import java.util.stream.Stream
+
 /**
  * Created by mtumilowicz on 2019-03-04.
  */
 class Workshop extends Specification {
-    
+
     def "define partial function on [0,...,3] in a manner: x -> x + 1 if x e [0,...,3], otherwise -1"() {
         given:
-        PartialFunction<Integer, Integer> increment = new Increment() // implement PartialFunction
-        
+        // implement in Increment
+        PartialFunction<Integer, Integer> increment = new Increment(Range.closed(0, 3))
+
         expect:
         increment.apply(-1) == -1
         increment.apply(0) == 1
@@ -33,7 +35,8 @@ class Workshop extends Specification {
 
     def "define partial function: identity on [0,...,3], otherwise random"() {
         given:
-        PartialFunction<Integer, Integer> randomIdentity = new RandomIdentity() // implement PartialFunction
+        // implement in RandomIdentity
+        PartialFunction<Integer, Integer> randomIdentity = new RandomIdentity(Range.closed(0, 3))
 
         expect:
         randomIdentity.apply(0) == 0
@@ -42,35 +45,31 @@ class Workshop extends Specification {
         randomIdentity.apply(3) == 3
     }
 
-    def "lifter - lifting partial function - Increment" () {
-        when:
-        Function<Integer, Option<Integer>> lifted = Lifter.lift(new Increment()) // implement Lifter.lift
+    def "lifter - lifting partial function - Increment, RandomIdentity"() {
+        given:
+        Function<Integer, Option<Integer>> liftedIncrement = Lifter.lift(new Increment()) // implement Lifter.lift
+        and:
+        Function<Integer, Option<Integer>> liftedRandomIdentity = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
 
-        then:
-        lifted.apply(-1) == Option.none()
-        lifted.apply(0) == Option.some(1)
-        lifted.apply(1) == Option.some(2)
-        lifted.apply(2) == Option.some(3)
-        lifted.apply(3) == Option.some(4)
-        lifted.apply(4) == Option.none()
-    }
-
-    def "lifter - lifting partial function - RandomIdentity"() {
-        when:
-        Function<Integer, Option<Integer>> lifted = Lifter.lift(new RandomIdentity(Range.closed(0, 3)))
-
-        then:
-        lifted.apply(-1) == Option.none()
-        lifted.apply(0) == Option.some(0)
-        lifted.apply(1) == Option.some(1)
-        lifted.apply(2) == Option.some(2)
-        lifted.apply(3) == Option.some(3)
-        lifted.apply(4) == Option.none()
+        expect:
+        liftedIncrement.apply(-1) == Option.none()
+        liftedIncrement.apply(0) == Option.some(1)
+        liftedIncrement.apply(1) == Option.some(2)
+        liftedIncrement.apply(2) == Option.some(3)
+        liftedIncrement.apply(3) == Option.some(4)
+        liftedIncrement.apply(4) == Option.none()
+        and:
+        liftedRandomIdentity.apply(-1) == Option.none()
+        liftedRandomIdentity.apply(0) == Option.some(0)
+        liftedRandomIdentity.apply(1) == Option.some(1)
+        liftedRandomIdentity.apply(2) == Option.some(2)
+        liftedRandomIdentity.apply(3) == Option.some(3)
+        liftedRandomIdentity.apply(4) == Option.none()
     }
 
     def "vavr - lifting function with Option: div"() {
         given:
-        BinaryOperator<Integer> div = { a, b -> a.intdiv(b)}
+        BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
 
         when:
         Function2<Integer, Integer, Option<Integer>> lifted = div // FunctionN.lift

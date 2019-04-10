@@ -43,30 +43,28 @@ class Answers extends Specification {
         randomIdentity.apply(3) == 3
     }
 
-    def "lifter - lifting partial function - Increment"() {
-        when:
-        Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(new IncrementAnswer(0..3))
+    def "lifter - lifting partial function - Increment, RandomIdentity"() {
+        given:
+        Function<Integer, Option<Integer>> liftedIncrement = LifterAnswer.lift(new IncrementAnswer(0..3))
+        and:
+        Function<Integer, Option<Integer>> liftedRandomIdentity = LifterAnswer.lift(
+                new RandomIdentityAnswer(Range.closed(0, 3))
+        )
 
-        then:
-        lifted.apply(-1) == Option.none()
-        lifted.apply(0) == Option.some(1)
-        lifted.apply(1) == Option.some(2)
-        lifted.apply(2) == Option.some(3)
-        lifted.apply(3) == Option.some(4)
-        lifted.apply(4) == Option.none()
-    }
-
-    def "lifter - lifting partial function with Option - RandomIdentity"() {
-        when:
-        Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(new RandomIdentityAnswer(Range.closed(0, 3)))
-
-        then:
-        lifted.apply(-1) == Option.none()
-        lifted.apply(0) == Option.some(0)
-        lifted.apply(1) == Option.some(1)
-        lifted.apply(2) == Option.some(2)
-        lifted.apply(3) == Option.some(3)
-        lifted.apply(4) == Option.none()
+        expect:
+        liftedIncrement.apply(-1) == Option.none()
+        liftedIncrement.apply(0) == Option.some(1)
+        liftedIncrement.apply(1) == Option.some(2)
+        liftedIncrement.apply(2) == Option.some(3)
+        liftedIncrement.apply(3) == Option.some(4)
+        liftedIncrement.apply(4) == Option.none()
+        and:
+        liftedRandomIdentity.apply(-1) == Option.none()
+        liftedRandomIdentity.apply(0) == Option.some(0)
+        liftedRandomIdentity.apply(1) == Option.some(1)
+        liftedRandomIdentity.apply(2) == Option.some(2)
+        liftedRandomIdentity.apply(3) == Option.some(3)
+        liftedRandomIdentity.apply(4) == Option.none()
     }
 
     def "lifter - lift function with Option"() {
