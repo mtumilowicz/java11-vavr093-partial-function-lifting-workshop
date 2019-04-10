@@ -106,7 +106,7 @@ class Workshop extends Specification {
         lifted.apply(4) == Option.none()
     }
 
-    def "vavr lifting function with Option: div"() {
+    def "vavr - lifting function with Option: div"() {
         given:
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b)}
 
@@ -120,7 +120,7 @@ class Workshop extends Specification {
         lifted.apply(4, 2) == Option.some(2)
     }
 
-    def "vavr lifting function with Try: Repository.findById"() {
+    def "vavr - lifting function with Try: Repository.findById"() {
         given:
         def repo = new RepositoryACL()
 

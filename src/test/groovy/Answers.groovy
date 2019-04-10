@@ -81,7 +81,7 @@ class Answers extends Specification {
         lifted.apply(4) == Option.none()
     }
 
-    def "lifter - lifting partial function - Validator"() {
+    def "lifter - lifting partial function with Option - Validator"() {
         when:
         Function<String, Option<Boolean>> lifted = LifterAnswer.lift(new ValidatorAnswer(Pattern.compile("^[a-z]*\$").asMatchPredicate()))
 
@@ -95,7 +95,7 @@ class Answers extends Specification {
         lifted.apply("%") == Option.none()
     }
 
-    def "lifter - lifting partial function - RandomIdentity"() {
+    def "lifter - lifting partial function with Option - RandomIdentity"() {
         when:
         Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(new RandomIdentityAnswer(Range.closed(0, 3)))
 
@@ -108,7 +108,56 @@ class Answers extends Specification {
         lifted.apply(4) == Option.none()
     }
 
-    def "vavr lifting function with Option: div"() {
+    def "lifter - lift function with Option"() {
+        given:
+        Function<Integer, Integer> exceptionalIdentity = {
+            switch (it) {
+                case 1:
+                    throw new IllegalArgumentException()
+                case 2:
+                    throw new IllegalStateException()
+                default:
+                    return it
+            }
+        }
+
+        when:
+        Function<Integer, Option<Integer>> lifted = LifterAnswer.lift(exceptionalIdentity)
+        
+        then:
+        lifted.apply(1) == Option.none()
+        lifted.apply(2) == Option.none()
+        lifted.apply(3) == Option.some(3)
+    }
+
+    def "lifter - lift function with Try"() {
+        given:
+        Function<Integer, Integer> exceptionalIdentity = {
+            switch (it) {
+                case 1:
+                    throw new IllegalArgumentException()
+                case 2:
+                    throw new IllegalStateException()
+                default:
+                    return it
+            }
+        }
+
+        when:
+        Function<Integer, Try<Integer>> lifted = LifterAnswer.liftTry(exceptionalIdentity)
+        def one = lifted.apply(1)
+        def two = lifted.apply(2)
+        def three = lifted.apply(3)
+
+        then:
+        one.failure
+        one.cause.class == IllegalArgumentException
+        two.failure
+        two.cause.class == IllegalStateException
+        three == Try.success(3)
+    }
+
+    def "vavr - lifting function with Option: div"() {
         given:
         BinaryOperator<Integer> div = { a, b -> a.intdiv(b) }
 
@@ -122,7 +171,7 @@ class Answers extends Specification {
         lifted.apply(4, 2) == Option.some(2)
     }
 
-    def "vavr lifting function with Try: Repository.findById"() {
+    def "vavr - lifting function with Try: Repository.findById"() {
         given:
         def repo = new RepositoryACLAnswer()
 
