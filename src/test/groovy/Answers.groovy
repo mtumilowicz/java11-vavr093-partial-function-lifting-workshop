@@ -76,7 +76,7 @@ class Answers extends Specification {
                 case 2:
                     throw new IllegalStateException()
                 default:
-                    return it
+                    it
             }
         }
 
@@ -98,7 +98,7 @@ class Answers extends Specification {
                 case 2:
                     throw new IllegalStateException()
                 default:
-                    return it
+                    it
             }
         }
 

@@ -78,7 +78,7 @@ class Workshop extends Specification {
                 case 2:
                     throw new IllegalStateException()
                 default:
-                    return it
+                    it
             }
         }
 
@@ -101,7 +101,7 @@ class Workshop extends Specification {
                 case 2:
                     throw new IllegalStateException()
                 default:
-                    return it
+                    it
             }
         }
 
