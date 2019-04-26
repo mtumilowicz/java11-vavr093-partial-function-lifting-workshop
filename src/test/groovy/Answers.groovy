@@ -148,7 +148,7 @@ class Answers extends Specification {
     def "vavr - lifting function with Try: Repository.findById"() {
         given:
         def repo = new Repository()
-        Function1<Integer, Try<User>> findById = Function1.liftTry({ repo.findById(it) })
+        Function1<Integer, Try<User>> findById = Function1.liftTry { repo.findById(it) }
 
         expect:
         findById.apply(1) == Try.success(new User(1))
@@ -176,8 +176,8 @@ class Answers extends Specification {
 
         when:
         Stream.of(cannotBeActive, canBeActive)
-                .map(Function1.lift({ BlockedUser blocked -> blocked.activate(now) }))
-                .forEach({ it.peek({ activeUserRepository.add(it) }) })
+                .map(Function1.lift { BlockedUser blocked -> blocked.activate(now) })
+                .forEach { it.peek { activeUserRepository.add(it) } }
 
         then:
         activeUserRepository.count() == 1
@@ -206,11 +206,11 @@ class Answers extends Specification {
 
         when:
         Stream.of(cannotBeActive, canBeActive)
-                .map(Function1.liftTry({ BlockedUser user -> user.activate(now) }))
-                .forEach({
-                    it.onSuccess({ activeUserRepository.add(it) })
-                            .onFailure({ fails.add(it.message) })
-                })
+                .map(Function1.liftTry { BlockedUser user -> user.activate(now) })
+                .forEach {
+                    it.onSuccess { activeUserRepository.add(it) }
+                            .onFailure { fails.add(it.message) }
+                }
 
         then:
         activeUserRepository.count() == 1
