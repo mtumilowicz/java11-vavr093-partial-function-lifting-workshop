@@ -209,7 +209,7 @@ class Answers extends Specification {
                 .map(Function1.liftTry { BlockedUser user -> user.activate(now) })
                 .forEach {
                     it.onSuccess { activeUserRepository.add(it) }
-                            .onFailure { fails.add(it.message) }
+                            .onFailure { fails << it.message }
                 }
 
         then:
