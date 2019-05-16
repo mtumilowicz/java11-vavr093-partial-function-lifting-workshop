@@ -32,7 +32,7 @@ class Answers extends Specification {
         increment.apply(4) == -1
     }
 
-    def "define partial function: identity on [0,...,3], otherwise random"() {
+    def "define partial function: identity on [0,...,3]"() {
         given:
         PartialFunction<Integer, Integer> randomIdentity = new RandomIdentityAnswer(Range.closed(0, 3))
 
