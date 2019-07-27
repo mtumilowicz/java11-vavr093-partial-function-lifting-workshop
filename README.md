@@ -7,8 +7,8 @@
 * https://www.vavr.io/vavr-docs/#_lifting
 * https://static.javadoc.io/io.vavr/vavr/0.9.3/io/vavr/PartialFunction.html
 * https://github.com/mtumilowicz/java11-vavr-function-lifting
-* on the workshop we will try to fix failing `Workshop`
-* answers: `Answers` (same tests as in `Workshop` but correctly solved)
+* in the workshop we will try to fix failing tests `groovy/Workshop`
+* answers: `groovy/Answers` (same tests as in `Workshop` but correctly solved)
 
 # theory in a nutshell
 * a partial function from `X` to `Y` is a function `f: K → Y`, 
