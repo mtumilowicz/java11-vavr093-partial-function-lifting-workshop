@@ -212,7 +212,7 @@ class Workshop extends Specification {
 
         when:
         /*
-        process here, reports are aggregated in fails
+        process here, reports should be aggregated in fails
         hint: use Function1.lift, BlockedUser.activate(now), Try.onSuccess, onFailure, activeUserRepository.add
          */
         Stream.of(cannotBeActive, canBeActive)
